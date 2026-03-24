@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f2027">
+<title>Bac Quiz Pro</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Playfair+Display:wght@700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<!-- Canvas confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+</head>
+
+<body>
+
+<!-- Built by Achref -->
+<div class="built-by" onclick="showBuiltByModal()">
+  <img src="img/achref logo.jpg" alt="Logo Achref" class="logo">
+  <span class="built-text">Built by Achref</span>
+</div>
+
+<!-- Built by Modal -->
+<div class="built-by-modal" id="builtByModal" onclick="closeBuiltByModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <img src="img/achref logo.jpg" alt="Logo Achref" class="modal-logo">
+    <p class="modal-text">Built by Achref</p>
+  </div>
+</div>
+
+<!-- شعارات الدراسة المتحركة -->
+<div class="study-icons">
+  <span class="icon" style="--i: 0">📚</span>
+  <span class="icon" style="--i: 1">✏️</span>
+  <span class="icon" style="--i: 2">🎓</span>
+  <span class="icon" style="--i: 3">📖</span>
+  <span class="icon" style="--i: 4">🖊️</span>
+  <span class="icon" style="--i: 5">📝</span>
+  <span class="icon" style="--i: 6">💡</span>
+  <span class="icon" style="--i: 7">🧠</span>
+  <span class="icon" style="--i: 8">📐</span>
+  <span class="icon" style="--i: 9">📊</span>
+  <span class="icon" style="--i: 10">✅</span>
+  <span class="icon" style="--i: 11">🎯</span>
+  <span class="icon" style="--i: 12">🏆</span>
+  <span class="icon" style="--i: 13">⭐</span>
+  <span class="icon" style="--i: 14">📚</span>
+  <span class="icon" style="--i: 15">📖</span>
+  <span class="icon" style="--i: 16">🔬</span>
+  <span class="icon" style="--i: 17">📱</span>
+  <span class="icon" style="--i: 18">🎨</span>
+  <span class="icon" style="--i: 19">🧪</span>
+  <span class="icon" style="--i: 20">🎭</span>
+  <span class="icon" style="--i: 21">⚡</span>
+  <span class="icon" style="--i: 22">🌟</span>
+  <span class="icon" style="--i: 23">📊</span>
+  <span class="icon" style="--i: 24">🔮</span>
+</div>
+
+<div class="quiz-container">
+  <!-- شاشة البداية -->
+  <div id="start-screen" class="screen">
+    <div id="logo-container">
+      <div class="animated-logo">📚</div>
+    </div>
+    <h1 class="start-title">Bac Quiz Pro Ultra</h1>
+    <p class="start-subtitle"><span class="subtitle-word">وإستمتع </span> <span class="subtitle-word">معلوماتك</span> <span class="subtitle-word">إختبر </span> <span class="subtitle-word">بالتعلم</span></p>
+    <button id="start-btn" class="start-btn">
+      <span class="btn-text">ابدأ الاختبار</span>
+      <span class="btn-icon">➡️</span>
+    </button>
+  </div>
+
+  <h1 id="main-title" class="hidden">📚 Bac Quiz</h1>
+
+  <div class="progress hidden" id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- شاشة اختيار المادة -->
+  <div id="subject-screen" class="hidden">
+    <h2>اختر المادة 📚</h2>
+    <button onclick="startQuiz('history')" class="pulse-glow">📜 تاريخ</button>
+    <button onclick="startQuiz('geo')" class="pulse-glow">🌍 جغرافيا</button>
+    <button onclick="startQuiz('islamic')" class="pulse-glow">🕌 علوم إسلامية</button>
+  </div>
+
+  <!-- شاشة الكويز -->
+  <div id="quiz-box" class="hidden">
+    <div id="timer-container">
+      <svg width="100" height="100">
+        <circle cx="50" cy="50" r="40" stroke="#333" stroke-width="6" fill="none" />
+        <circle id="timer-bar" cx="50" cy="50" r="40" stroke="#00ffcc" stroke-width="6" fill="none"
+          stroke-dasharray="251.33" stroke-dashoffset="0" transform="rotate(-90 50 50)" />
+      </svg>
+      <div id="timer-text">30</div>
+    </div>
+    <h2 id="question"></h2>
+    <div id="answers"></div>
+  </div>
+
+  <button id="nextBtn" class="hidden pulse-glow">التالي ➡️</button>
+
+  <!-- حاوية التعليل المنفصلة -->
+  <div id="explanation-panel" class="hidden">
+    <button class="explanation-toggle-btn" id="explanationToggleBtn">📚 اظهار التعليل</button>
+    <div id="explanation-content" class="explanation-content hidden"></div>
+  </div>
+
+  <div id="result" class="hidden"></div>
+
+  <!-- أصوات التأثيرات -->
+  <audio id="correctSound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="wrongSound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" type="audio/mpeg">
+  </audio>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
